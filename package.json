@@ -1,7 +1,7 @@
 {
-  "name": "webpack-template",
+  "name": "odin-todo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Initialize using npm init, then npm install.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -20,5 +20,8 @@
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }
