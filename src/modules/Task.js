@@ -1,4 +1,4 @@
-class Task {
+export default class Task {
   #id;
   #projectId;
   #name;
@@ -9,25 +9,26 @@ class Task {
   static #nextId = 0;
 
   /**
-   * Creates a new task
+   * Create a new task
    * @param {String} projectId id of parent project
    * @param {String} name name of task
    * @param {String} description short description of task
    * @param {Date} creationDate date task was created, default is current date
    * @param {Date} dueDate date task is due, default is null
+   * @param {Boolean} completed status of task, default is false
    */
-  constructor(projectId, name, description, creationDate = Date.now(), dueDate = null) {
+  constructor(projectId, name, description, creationDate = Date.now(), dueDate = null, completed = false) {
     this.#id = Task.#genID();
     this.#projectId = projectId;
     this.#name = name;
     this.#description = description;
     this.#creationDate = creationDate;
     this.#dueDate = dueDate;
-    this.#completed = false;
+    this.#completed = completed;
   }
 
   /**
-   * Toggles the completed status of the task
+   * Toggle the completed status of the task
    * @returns {Boolean} the new completed status
    */
   toggleCompleted() {
@@ -36,8 +37,8 @@ class Task {
   }
 
   /**
-   * Converts the task to a JSON object
-   * @returns {Object} JSON representation of the task
+   * Convert the task to a JSON object
+   * @returns {JSON} JSON representation of the task
    */
   toJson() {
     return {
@@ -52,12 +53,11 @@ class Task {
   }
 
   /**
-   * Generates new id for task
+   * Generate new id for task
    * @returns {Number} the next available id
    */
   static #genID() { return Task.#nextId++; }
 
-  
   get id() { return this.#id; }
   get projectId() { return this.#projectId; }
   get name() { return this.#name; }
