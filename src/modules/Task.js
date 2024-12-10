@@ -9,15 +9,16 @@ export default class Task {
   static #nextId = 0;
 
   /**
-   * Create a new task
-   * @param {String} projectId id of parent project
-   * @param {String} name name of task
-   * @param {String} description short description of task
-   * @param {Date} creationDate date task was created, default is current date
-   * @param {Date} dueDate date task is due, default is null
-   * @param {Boolean} completed status of task, default is false
+   * 
+   * @param {Object} taskJson object containing task data
+   * @param {String} taskJson.projectId id of parent project
+   * @param {String} taskJson.name name of task
+   * @param {String} taskJson.description short description of task
+   * @param {Date=} taskJson.creationDate date task was created, default: Date.now()
+   * @param {Date=} taskJson.dueDate date task is due, default: null
+   * @param {Boolean=} taskJson.completed status of task, default: false
    */
-  constructor(projectId, name, description, creationDate = Date.now(), dueDate = null, completed = false) {
+  constructor({ projectId, name, description, creationDate = Date.now(), dueDate = null, completed = false }) {
     this.#id = Task.#genID();
     this.#projectId = projectId;
     this.#name = name;
@@ -58,6 +59,7 @@ export default class Task {
    */
   static #genID() { return Task.#nextId++; }
 
+  /* ------------------------- Getters ------------------------- */
   get id() { return this.#id; }
   get projectId() { return this.#projectId; }
   get name() { return this.#name; }
@@ -69,7 +71,8 @@ export default class Task {
     if (this.#completed || this.#dueDate === null) return false;
     else return (Date.now() > this.#dueDate);
   }
-
+  
+  /* ------------------------- Setters ------------------------- */
   set projectId(projectId) { this.#projectId = projectId; }
   set name(name) { this.#name = name; }
   set description(description) { this.#description = description; }

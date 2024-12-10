@@ -21,7 +21,8 @@ export default class Project {
    * @returns {Number} the id of the new task
    */
   addTask(taskJson) {
-    let task = new Task(this.#id, taskJson.name, taskJson.description, taskJson.creationDate, taskJson.dueDate, taskJson.completed);
+    taskJson.projectId = this.#id;
+    let task = new Task(taskJson);
     this.#tasks.push(task);
     return task.id;
   }
