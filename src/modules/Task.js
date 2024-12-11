@@ -9,16 +9,16 @@ export default class Task {
   static #nextId = 0;
 
   /**
-   * 
+   * Create a new task
    * @param {Object} taskJson object containing task data
    * @param {String} taskJson.projectId id of parent project
    * @param {String} taskJson.name name of task
-   * @param {String} taskJson.description short description of task
+   * @param {String=} taskJson.description short description of task, default: null
    * @param {Date=} taskJson.creationDate date task was created, default: Date.now()
    * @param {Date=} taskJson.dueDate date task is due, default: null
    * @param {Boolean=} taskJson.completed status of task, default: false
    */
-  constructor({ projectId, name, description, creationDate = Date.now(), dueDate = null, completed = false }) {
+  constructor({ projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false }) {
     this.#id = Task.#genID();
     this.#projectId = projectId;
     this.#name = name;
