@@ -20,7 +20,7 @@ export default class Project {
 
   /**
    * Add a new task to the project
-   * @param {JSON} taskJson JSON object containing task data
+   * @param {Object} taskJson JSON object containing task data
    * @param {String} taskJson.name name of task
    * @param {String=} taskJson.description short description of task, default: null
    * @param {Date=} taskJson.creationDate date task was created, default: Date.now()
@@ -100,7 +100,7 @@ export default class Project {
 
   /**
    * Convert the project to a JSON object
-   * @returns {JSON} JSON representation of the project
+   * @returns {Object} JSON representation of the project
    */
   toJson() {
     return {
@@ -113,16 +113,16 @@ export default class Project {
   /**
    * Get JSON of a task from the project by id
    * @param {Number} taskId id of task to get
-   * @returns {JSON} JSON representation of the task
+   * @returns {Object} JSON representation of the task
    */
-  getTaskById(taskId) {
+  getTaskData(taskId) {
     let task = this.#findTask(taskId);
     if (!task) return undefined;
     return task.toJson();
   }
 
   /**
-   * finds and returns a task with the given id
+   * Find and return a task with the given id
    * @param {Number} taskId id of task to find
    * @returns {Task} the task with the given id, or undefined if not found
    */
