@@ -8,11 +8,14 @@ export default class Project {
 
   /**
    * Create a new project
-   * @param {String} name name of the project
+   * @param {Object} projectJson object containing project data
+   * @param {String} projectJson.name name of the project
+   * @param {Array<Object>=} projectJson.tasks array of task objects, default: []
    */
-  constructor(name) {
+  constructor({ name, tasks = [] }) {
     this.#id = Project.#genID();
     this.#name = name;
+    tasks.forEach(task => this.addTask(task));
   }
 
   /**
