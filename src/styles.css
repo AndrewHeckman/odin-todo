@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sarina&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  box-sizing: border-box;
+}
+
+:root{
+  --primary-background: #202020;
+  --secondary-background: #181818;
+  --primary: #ff4444;
+  --mouseover: #ff4444a8;
+  --selected: #ff444454;
+  --important: #ff4444;
+  /* #8b2e2e */
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+body {
+  grid-template-columns: 32ch 1fr;
+  height: 100vh;
+}
+
+#sidebar {
+  background-color: var(--secondary-background);
+  padding: 2rem 0.5rem;
+  height: max(100vh, 100%);
+}
+
+li {
+  list-style: none;
+  margin: 0.5rem 0;
+}
+
+.nav-btn {
+  width: 100%;
+  background-color: inherit;
+  border: none;
+  border-radius: 0.25rem;
+  text-align: left;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: var(--mouseover);
+  cursor: pointer;
+}
+
+button:active {
+  background-color: var(--primary);
+}
+
+.nav-btn, .separator {
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.separator {
+  border-bottom: 1px solid white;
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+main {
+  background-color: var(--primary-background);
+  overflow: auto;
+}
+
+.project {
+  width: clamp(64ch, 60%, 128ch);
+  margin: 4rem auto;
+}
+
+.project-name {
+  color: white;
+}
+
+.task {
+  border-bottom: 1px solid white;
+  padding: 0.5rem 0;
+  grid-template-columns: 2rem 1fr 6em 4em;
+  grid-template-rows: 1fr;
+  color: white;
+}
+
+.checkbox {
+  height: 1.25rem;
+  aspect-ratio: 1 / 1;
+  margin: auto;
+  border: 2px solid white;
+  border-radius: 0.625rem;
+  background-color: inherit;
+}
+
+.task-desc {
+  font-size: 0.75rem;
+}
+
+.task-date {
+  margin: auto;
+}
+.edit-btn, .p-add-task-btn {
+  width: fit-content;
+  border: none;
+  color: white;
+  background-color: inherit;
+  font-size: medium;
+}
+
+.edit-btn {
+  margin: auto;
+}
+
+.p-add-task-btn {
+  margin-top: 0.5rem;
+}

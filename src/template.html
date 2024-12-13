@@ -3,9 +3,78 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>To-Day</title>
   </head>
-  <body>
-
+  <body class="grid">
+    <nav id="sidebar">
+      <ul id="buttons-list" class="nav-list">
+        <li>
+          <button type="button" id="add-task-btn-1" class="nav-btn">
+            Add task
+          </button>
+        </li>
+        <li>
+          <button type="button" id="add-project-btn" class="nav-btn">
+            Add project
+          </button>
+        </li>
+        <li>
+          <button type="button" id="inbox-btn" class="nav-btn">
+            Inbox
+          </button>
+        </li>
+        <li>
+          <button type="button" id="today-btn" class="nav-btn">
+            Today
+          </button>
+        </li>
+      </ul>
+      <p class="separator">Projects</p>
+      <ul id="project-list" class="nav-list">
+        <!-- Projects -->
+      </ul>
+    </nav>
+    <main>
+      <div id="pt" class="project">
+        <h1 id="pt-name" class="project-name">Today's Tasks</h1>
+        <div id="pt-tasks" class="tasks">
+          <div id="p0-t0" class="grid task" data-id="0">
+            <button id="p0-t0-check" class="checkbox"></button>
+            <div id="p0-t0-text" class="task-text">
+              <div id="p0-t0-name" class="task-name">Example task 1</div>
+              <div id="p0-t0-desc" class="task-desc">Example description 1</div>
+            </div>
+            <div id="p0-t0-date" class="task-date">1 Jan 1970</div>
+            <button id="p0-t0-edit" class="edit-btn">Edit</button>
+          </div>
+          <div id="p0-t1" class="grid task" data-id="1">
+            <button id="p0-t1-check" class="checkbox"></button>
+            <div id="p0-t1-text" class="task-text">
+              <div id="p0-t1-name" class="task-name">Example task 2</div>
+            </div>
+            <div id="p0-t1-date" class="task-date">1 Jan 1970</div>
+            <button id="p0-t1-edit" class="edit-btn">Edit</button>
+          </div>
+          <div id="p0-t2" class="grid task" data-id="2">
+            <button id="p0-t2-check" class="checkbox"></button>
+            <div id="p0-t2-text" class="task-text">
+              <div id="p0-t2-name" class="task-name">Example task 3</div>
+              <div id="p0-t2-desc" class="task-desc">Example description 3</div>
+            </div>
+            <div id="p0-t2-date" class="task-date"></div>
+            <button id="p0-t2-edit" class="edit-btn">Edit</button>
+          </div>
+          <div id="p0-t3" class="grid task" data-id="3">
+            <button id="p0-t3-check" class="checkbox"></button>
+            <div id="p0-t3-text" class="task-text">
+              <div id="p0-t3-name" class="task-name">Example Task 4</div>
+            </div>
+            <div id="p0-t3-date" class="task-date"></div>
+            <button id="p0-t3-edit" class="edit-btn">Edit</button>
+          </div>
+        </div>
+        <button type="button" id="p0-add-task-btn" class="p-add-task-btn">Add task</button>
+      </div>
+    </main>
   </body>
 </html>
