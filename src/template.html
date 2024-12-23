@@ -9,7 +9,7 @@
     <nav id="sidebar">
       <ul id="buttons-list" class="nav-list">
         <li>
-          <button type="button" id="add-task-btn-1" class="nav-btn">
+          <button type="button" id="add-task-btn" class="nav-btn" data-proj="0">
             Add task
           </button>
         </li>
@@ -19,7 +19,7 @@
           </button>
         </li>
         <li>
-          <button type="button" id="inbox-btn" class="nav-btn">
+          <button type="button" id="inbox-btn" class="nav-btn" data-proj="0">
             Inbox
           </button>
         </li>
@@ -35,46 +35,107 @@
       </ul>
     </nav>
     <main>
-      <div id="pt" class="project">
-        <h1 id="pt-name" class="project-name">Today's Tasks</h1>
-        <div id="pt-tasks" class="tasks">
-          <div id="p0-t0" class="grid task" data-id="0">
-            <button id="p0-t0-check" class="checkbox"></button>
-            <div id="p0-t0-text" class="task-text">
-              <div id="p0-t0-name" class="task-name">Example task 1</div>
-              <div id="p0-t0-desc" class="task-desc">Example description 1</div>
+      <div id="today" class="project">
+        <h1 id="today-name" class="project-name">Today's Tasks</h1>
+        <div id="today-tasks" class="tasks">
+          <div id="t0" class="grid task" data-task="0" data-proj="0">
+            <button id="t0-check" class="checkbox">&check;</button>
+            <div id="t0-text" class="task-text">
+              <p id="t0-name" class="task-name">Example task 1</p>
+              <p id="t0-desc" class="task-desc">Example description 1</p>
             </div>
-            <div id="p0-t0-date" class="task-date">1 Jan 1970</div>
-            <button id="p0-t0-edit" class="edit-btn">Edit</button>
+            <p id="t0-date" class="task-date">1 Jan 1970</p>
+            <button id="t0-edit" class="task-edit">Edit</button>
           </div>
-          <div id="p0-t1" class="grid task" data-id="1">
-            <button id="p0-t1-check" class="checkbox"></button>
-            <div id="p0-t1-text" class="task-text">
-              <div id="p0-t1-name" class="task-name">Example task 2</div>
+          <div id="t1" class="grid task" data-task="1" data-proj="0">
+            <button id="t1-check" class="checkbox">&check;</button>
+            <div id="t1-text" class="task-text">
+              <p id="t1-name" class="task-name">Example task 2</p>
             </div>
-            <div id="p0-t1-date" class="task-date">1 Jan 1970</div>
-            <button id="p0-t1-edit" class="edit-btn">Edit</button>
+            <p id="t1-date" class="task-date">1 Jan 1970</p>
+            <button id="t1-edit" class="task-edit">Edit</button>
           </div>
-          <div id="p0-t2" class="grid task" data-id="2">
-            <button id="p0-t2-check" class="checkbox"></button>
-            <div id="p0-t2-text" class="task-text">
-              <div id="p0-t2-name" class="task-name">Example task 3</div>
-              <div id="p0-t2-desc" class="task-desc">Example description 3</div>
+          <div id="t2" class="grid task" data-task="2" data-proj="0">
+            <button id="t2-check" class="checkbox">&check;</button>
+            <div id="t2-text" class="task-text">
+              <p id="t2-name" class="task-name">Example task 3</p>
+              <p id="t2-desc" class="task-desc">Example description 3</p>
             </div>
-            <div id="p0-t2-date" class="task-date"></div>
-            <button id="p0-t2-edit" class="edit-btn">Edit</button>
+            <button id="t2-edit" class="task-edit">Edit</button>
           </div>
-          <div id="p0-t3" class="grid task" data-id="3">
-            <button id="p0-t3-check" class="checkbox"></button>
-            <div id="p0-t3-text" class="task-text">
-              <div id="p0-t3-name" class="task-name">Example Task 4</div>
+          <div id="t3" class="grid task" data-task="3" data-proj="0">
+            <button id="t3-check" class="checkbox">&check;</button>
+            <div id="t3-text" class="task-text">
+              <p id="t3-name" class="task-name">Example Task 4</p>
             </div>
-            <div id="p0-t3-date" class="task-date"></div>
-            <button id="p0-t3-edit" class="edit-btn">Edit</button>
+            <button id="t3-edit" class="task-edit">Edit</button>
           </div>
         </div>
-        <button type="button" id="p0-add-task-btn" class="p-add-task-btn">Add task</button>
+        <button type="button" id="today-add-task-btn" class="p-add-task-btn">Add task</button>
       </div>
     </main>
+    <dialog id="project-add-dialog" class="popup">
+      <form name="project-add-form" action="modules/Display.js">
+        <h2>Add new project</h2>
+        <div>
+          <label for="project-add-name">Name:</label>
+          <input type="text" id="project-add-name" name="project-add-name"
+            required>
+        </div>
+        <button type="submit" id="project-add-submit">Submit</button>
+      </form>
+      <button id="project-add-close">Close</button>
+    </dialog>
+    <dialog id="task-add-dialog" class="popup">
+      <form name="task-add-form" action="modules/Display.js">
+        <h2>Add new task</h2>
+        <div>
+          <label for="task-add-name">Name:</label>
+          <input type="text" id="task-add-name" name="task-add-name" placeholder="Name" required>
+        </div>
+        <div>
+          <label for="task-add-project">Project:</label>
+          <select id="task-add-project" name="task-add-project" size="1">
+            <option id="task-add-p0" value="0" data-proj="0">Inbox</option>
+            <!-- Projects -->
+        </div>
+        <div>
+          <label for="task-add-desc">Description:</label>
+          <textarea id="task-add-desc" name="task-add-desc"></textarea>
+        </div>
+        <div>
+          <label for="task-add-date">Due date:</label>
+          <input type="datetime-local" id="task-add-date" name="task-add-date">
+        </div>
+        <button type="submit" id="task-add-submit">Submit</button>
+      </form>
+      <button id="task-add-close">Close</button>
+    </dialog>
+    <dialog id="task-edit-dialog" class="popup">
+      <form action="modules/Display.js" name="task-edit-form">
+        <h2>Edit task</h2>
+        <div>
+          <label for="task-edit-name">Name:</label>
+          <input type="text" id="task-edit-name" name="task-edit-name" required>
+        </div>
+        <div>
+          <label for="task-edit-project">Project:</label>
+          <select id="task-edit-project" name="task-edit-project" size="1">
+            <option id="task-edit-p0" value="0" data-proj="0">Inbox</option>
+            <!-- Projects -->
+          </select>
+        </div>
+        <div>
+          <label for="task-edit-desc">Description:</label>
+          <textarea id="task-edit-desc" name="task-edit-desc"></textarea>
+        </div>
+        <div>
+          <label for="task-edit-date">Due date:</label>
+          <input type="datetime-local" id="task-edit-date" name="task-edit-date">
+        </div>
+        <button type="submit" id="task-edit-submit">Submit</button>
+      </form>
+      <button id="task-edit-close">Close</button>
+    </dialog>
   </body>
 </html>

@@ -99,6 +99,11 @@ main {
   border: 2px solid white;
   border-radius: 0.625rem;
   background-color: inherit;
+  color: var(--primary-background);
+}
+
+.checkbox:hover {
+  color: white;
 }
 
 .task-desc {
@@ -108,7 +113,7 @@ main {
 .task-date {
   margin: auto;
 }
-.edit-btn, .p-add-task-btn {
+.task-edit, .p-add-task-btn {
   width: fit-content;
   border: none;
   color: white;
@@ -116,10 +121,28 @@ main {
   font-size: medium;
 }
 
-.edit-btn {
+.task-edit {
   margin: auto;
+  grid-column: 4 / 5;
 }
 
 .p-add-task-btn {
   margin-top: 0.5rem;
+}
+
+.popup {
+  margin: 7rem auto;
+  padding: 1rem;
+  background-color: var(--secondary-background);
+  color: white;
+  border: 0;
+}
+
+input, select, textarea {
+  background-color: var(--primary-background);
+  color: white;
+  border: 0;
+  border: 1px solid white;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
 }
