@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest"> -->
     <title>To-Day</title>
   </head>
   <body class="grid">
@@ -75,67 +80,66 @@
       </div>
     </main>
     <dialog id="project-add-dialog" class="popup">
-      <form name="project-add-form" action="modules/Display.js">
+      <form id="project-add-form" name="project-add-form" action="index.html">
         <h2>Add new project</h2>
         <div>
           <label for="project-add-name">Name:</label>
-          <input type="text" id="project-add-name" name="project-add-name"
-            required>
+          <input type="text" id="project-add-name" name="project-add-name" autocomplete="off" required>
         </div>
         <button type="submit" id="project-add-submit">Submit</button>
       </form>
       <button id="project-add-close">Close</button>
     </dialog>
     <dialog id="task-add-dialog" class="popup">
-      <form name="task-add-form" action="modules/Display.js">
+      <form id="task-add-form" name="task-add-form" action="index.html">
         <h2>Add new task</h2>
         <div>
           <label for="task-add-name">Name:</label>
-          <input type="text" id="task-add-name" name="task-add-name" placeholder="Name" required>
+          <input type="text" id="task-add-name" name="task-add-name" placeholder="Name" autocomplete="off" required>
         </div>
         <div>
           <label for="task-add-project">Project:</label>
           <select id="task-add-project" name="task-add-project" size="1">
             <option id="task-add-p0" value="0" data-proj="0">Inbox</option>
             <!-- Projects -->
-        </div>
-        <div>
-          <label for="task-add-desc">Description:</label>
-          <textarea id="task-add-desc" name="task-add-desc"></textarea>
-        </div>
-        <div>
-          <label for="task-add-date">Due date:</label>
+          </div>
+          <div>
+            <label for="task-add-desc">Description:</label>
+            <textarea id="task-add-desc" name="task-add-desc"></textarea>
+          </div>
+          <div>
+            <label for="task-add-date">Due date:</label>
           <input type="datetime-local" id="task-add-date" name="task-add-date">
-        </div>
-        <button type="submit" id="task-add-submit">Submit</button>
-      </form>
-      <button id="task-add-close">Close</button>
-    </dialog>
-    <dialog id="task-edit-dialog" class="popup">
-      <form action="modules/Display.js" name="task-edit-form">
-        <h2>Edit task</h2>
-        <div>
-          <label for="task-edit-name">Name:</label>
-          <input type="text" id="task-edit-name" name="task-edit-name" required>
-        </div>
-        <div>
-          <label for="task-edit-project">Project:</label>
-          <select id="task-edit-project" name="task-edit-project" size="1">
-            <option id="task-edit-p0" value="0" data-proj="0">Inbox</option>
-            <!-- Projects -->
-          </select>
-        </div>
-        <div>
-          <label for="task-edit-desc">Description:</label>
-          <textarea id="task-edit-desc" name="task-edit-desc"></textarea>
-        </div>
-        <div>
-          <label for="task-edit-date">Due date:</label>
+          </div>
+          <button type="submit" id="task-add-submit">Submit</button>
+        </form>
+        <button id="task-add-close">Close</button>
+      </dialog>
+      <dialog id="task-edit-dialog" class="popup">
+        <form id="task-edit-form" name="task-edit-form" action="index.html">
+          <h2>Edit task</h2>
+          <div>
+            <label for="task-edit-name">Name:</label>
+          <input type="text" id="task-edit-name" name="task-edit-name" autocomplete="off" required>
+          </div>
+          <div>
+            <label for="task-edit-project">Project:</label>
+            <select id="task-edit-project" name="task-edit-project" size="1">
+              <option id="task-edit-p0" value="0" data-proj="0">Inbox</option>
+              <!-- Projects -->
+            </select>
+          </div>
+          <div>
+            <label for="task-edit-desc">Description:</label>
+            <textarea id="task-edit-desc" name="task-edit-desc"></textarea>
+          </div>
+          <div>
+            <label for="task-edit-date">Due date:</label>
           <input type="datetime-local" id="task-edit-date" name="task-edit-date">
-        </div>
-        <button type="submit" id="task-edit-submit">Submit</button>
-      </form>
-      <button id="task-edit-close">Close</button>
-    </dialog>
-  </body>
-</html>
+          </div>
+          <button type="submit" id="task-edit-submit">Submit</button>
+        </form>
+        <button id="task-edit-close">Close</button>
+      </dialog>
+    </body>
+  </html>
