@@ -84,10 +84,14 @@ export default class Display {
     let projectId = document.querySelector("#task-add-project").value;
     let description = document.querySelector("#task-add-desc").value;
     let dateString = document.querySelector("#task-add-date").value;
-    let dateParts = dateString.split("-");
-    let dueDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
-    dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+    let dueDate = null;
     let src = document.querySelector("#task-add-src").value;
+    
+    if (dateString && dateString != "Invalid Date") {
+      dateString = dateString.split("-");
+      dueDate = new Date(Date.UTC(dateString[0], dateString[1] - 1, dateString[2]));
+      dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+    }
 
     // add task to projectList
     let id = this.#projectList.addTask(projectId, { name, description, dueDate });
@@ -322,7 +326,7 @@ export default class Display {
     button.id = `p${id}-btn`;
     button.dataset.proj = id;
     button.textContent = name;
-    button.addEventListener("click", this.#handleProjectClick);
+    button.addEventListener("click", this.#handleProjectClick.bind(this));
     this.#sidebarList.appendChild(button);
   }
 
@@ -333,15 +337,18 @@ export default class Display {
    * @param {String} projectJson.name name of the project 
    */
   #addProjectSelectOption({ id, name }) {
-    let option = document.createElement("option");
-    option.id = `task-add-p${id}`;
-    option.value = id;
-    option.dataset.proj = id;
-    option.textContent = name;
-    document.querySelector("#task-add-project").appendChild(option);
-
-    option.id = `task-edit-p${id}`;
-    document.querySelector("#task-edit-project").appendChild(option);
+    let optionAdd = document.createElement("option");
+    let optionEdit = document.createElement("option");
+    optionAdd.id = `task-add-p${id}`;
+    optionEdit.id = `task-edit-p${id}`;
+    optionAdd.value = id;
+    optionEdit.value = id;
+    optionAdd.dataset.proj = id;
+    optionEdit.dataset.proj = id;
+    optionAdd.textContent = name;
+    optionEdit.textContent = name;
+    document.querySelector("#task-add-project").appendChild(optionAdd);
+    document.querySelector("#task-edit-project").appendChild(optionEdit);
   }
 
   // ------------------------------ element selection ------------------------------

@@ -8,8 +8,7 @@ export default class ProjectList {
    * @param {Object} projectListJson object containing project list data
    * @param {Array<Object>=} projectListJson.projects array of project objects, default: []
    */
-  constructor({ projects = [] }) {
-    this.addProject({ name: "Inbox" });
+  constructor({ projects = [{ name: "Inbox" }] }) {
     projects.forEach(project => this.addProject(project));
   }
 
