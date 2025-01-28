@@ -128,3 +128,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+src/images/about.txt
+src/images/android-chrome-192x192.png
+src/images/android-chrome-512x512.png
+src/images/apple-touch-icon.png
+src/images/favicon-16x16.png
+src/images/favicon-32x32.png
+src/images/site.webmanifest
