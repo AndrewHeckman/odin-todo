@@ -4,15 +4,12 @@ export default class Display {
   #projectList;
   #sidebarList = document.querySelector("#project-list");
   #todayElement = document.querySelector("#today");
+  #todayTasks = document.querySelector("#today-tasks");
   #projectAddDialog = document.querySelector("#project-add-dialog");
   #taskAddDialog = document.querySelector("#task-add-dialog");
-  /**
-   * array of objects { id, name, projectElement }
-   */
+  /** Array of objects { id, name, projectElement } */
   #projectElements = [];
-  /**
-   * Array of objects { id, projectId, taskElement }
-   */
+  /** Array of objects { id, projectId, taskElement } */
   #taskElements = [];
 
   constructor() {
@@ -53,7 +50,7 @@ export default class Display {
     // populate sidebar with project buttons
 
     // load today's tasks and render them
-    // this.#renderProject(null);
+    this.#renderProject(null);
   }
 
   // ------------------------------ event handlers ------------------------------
@@ -63,23 +60,52 @@ export default class Display {
    * @param {Event} event 
    */
   #handleTaskAddClick(event) {
-    let id = event.target.dataset.proj;
-    // prefill project name in dialog
-    document.querySelector("#task-add-project").value = id;
+    // clear form
+    document.querySelector("#task-add-form").reset();
+
+    // where button was clicked, null for today
+    let src = event.target.dataset.proj ?? null;
+
+    // prefill project name in dialog, default to 0 for inbox
+    document.querySelector("#task-add-project").value = src ?? 0;
+    document.querySelector("#task-add-src").value = src;
+
     this.#taskAddDialog.showModal();
   }
 
+  /**
+   * Event handler for clicking the submit button on the task add dialog.
+   * Adds a task to the projectList and creates a task element
+   * @param {Event} event 
+   */
   #handleTaskAddSubmit(event) {
+    event.preventDefault();
     let name = document.querySelector("#task-add-name").value;
     let projectId = document.querySelector("#task-add-project").value;
     let description = document.querySelector("#task-add-desc").value;
-    let dueDate = new Date(document.querySelector("#task-add-date").value);
+    let dateString = document.querySelector("#task-add-date").value;
+    let dateParts = dateString.split("-");
+    let dueDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+    dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+    let src = document.querySelector("#task-add-src").value;
 
     // add task to projectList
     let id = this.#projectList.addTask(projectId, { name, description, dueDate });
+    // this.#saveData();
 
     // create task element
     this.#createTaskElement({ id, projectId, name, description, dueDate });
+    
+    this.#taskAddDialog.close();
+
+    // if task was added from today and is due today, render today
+    // else render project
+    if (!src && dueDate && dueDate <= new Date(Date.now()).setHours(23, 59, 59, 999)) {
+      this.#renderProject(null);
+    }
+    else {
+      this.#renderProject(projectId);
+    }
   }
 
   /**
@@ -95,6 +121,9 @@ export default class Display {
    * @param {Event} event 
    */
   #handleProjectAddClick(event) {
+    // clear form
+    document.querySelector("#project-add-form").reset();
+
     this.#projectAddDialog.showModal();
   }
 
@@ -103,10 +132,11 @@ export default class Display {
    * @param {Event} event 
    */
   #handleProjectAddSubmit(event) {
+    event.preventDefault();
     let name = document.querySelector("#project-add-name").value;
     
     let id = this.#projectList.addProject({ name });
-    this.#saveData();
+    // this.#saveData();
 
     this.#createProjectElement({ id, name });
     this.#addSidebarButton({ id, name });
@@ -238,8 +268,8 @@ export default class Display {
 
     checkbox.classList.add("checkbox");
     checkbox.id = `t${id}-check`;
-    checkbox.textContent = "&check;";
-    checkbox.addEventListener("click", this.#handleTaskCheckClick);
+    checkbox.textContent = '✓';
+    checkbox.addEventListener("click", this.#handleTaskCheckClick.bind(this));
     taskElement.appendChild(checkbox);
 
     taskText.classList.add("task-text");
@@ -259,18 +289,18 @@ export default class Display {
       taskText.appendChild(taskDescription);
     }
 
-    if (dueDate) {
+    if (dueDate && dueDate != "Invalid Date") {
       taskDueDate = document.createElement("p");
       taskDueDate.classList.add("task-date");
       taskDueDate.id = `t${id}-date`;
-      // taskDueDate.textContent = dueDate.toDateString();
+      taskDueDate.textContent = dueDate.toDateString();
       taskElement.appendChild(taskDueDate);
     }
 
     taskEdit.classList.add("task-edit");
     taskEdit.id = `t${id}-edit`;
     taskEdit.textContent = "Edit";
-    taskEdit.addEventListener("click", this.#handleTaskEditClick);
+    taskEdit.addEventListener("click", this.#handleTaskEditClick.bind(this));
     taskElement.appendChild(taskEdit);
 
     this.#taskElements.push({ id, projectId, taskElement });
@@ -336,21 +366,6 @@ export default class Display {
 
   // ------------------------------ element manipulation ------------------------------
 
-  /**
-   * Populates the today element with tasks due today
-   */
-  #populateTodayElement() {
-    this.#taskElements.forEach(task => {
-      let dueDate = this.#projectList.getTaskData(task.projectId, task.id).dueDate;
-        if (dueDate.getDate() == Date.now().getDate()
-          && dueDate.getMonth() == Date.now().getMonth()
-          && dueDate.getFullYear() == Date.now().getFullYear()
-        ) {
-          this.#todayElement.appendChild(task.taskElement);
-        }
-    })
-  }
-
   #editProjectElementName(projectId, newName) {
     let project = this.#getProjectElementObject(projectId).projectElement;
     project.querySelector(".project-name").textContent = newName;
@@ -400,9 +415,27 @@ export default class Display {
     let projectElement;
     if (projectId) {
       projectElement = this.#getProjectElementObject(projectId).projectElement;
+      
+      this.#taskElements.forEach(task => {
+        if (task.projectId == projectId) {
+          projectElement.querySelector(".tasks").appendChild(task.taskElement);
+        }
+      });
     }
     else {
-      this.#populateTodayElement();
+      // today at midnight local time
+      let today = new Date(Date.now()).setHours(23, 59, 59, 999);
+
+      // clear task elements from today element
+      this.#todayTasks.replaceChildren();
+
+      this.#taskElements.forEach(task => {
+        let dueDate = this.#projectList.getTaskData(task.projectId, task.id).dueDate;
+        if (dueDate <= today) {
+          this.#todayTasks.appendChild(task.taskElement);
+        }
+      })
+
       projectElement = this.#todayElement;
     }
     document.querySelector("main").replaceChildren(projectElement);
