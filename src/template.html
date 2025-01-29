@@ -108,9 +108,10 @@
         </div>
         <div>
           <label for="task-edit-date">Due date:</label>
-          <input type="datetime-local" id="task-edit-date" name="task-edit-date">
+          <input type="date" id="task-edit-date" name="task-edit-date">
         </div>
         <button type="submit" id="task-edit-submit">Submit</button>
+        <input type="hidden" id="task-edit-src" name="task-edit-src" value="0">
       </form>
       <button id="task-edit-close">Close</button>
     </dialog>

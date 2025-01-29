@@ -5,8 +5,9 @@ export default class Display {
   #sidebarList = document.querySelector("#project-list");
   #todayElement = document.querySelector("#today");
   #todayTasks = document.querySelector("#today-tasks");
-  #projectAddDialog = document.querySelector("#project-add-dialog");
   #taskAddDialog = document.querySelector("#task-add-dialog");
+  #projectAddDialog = document.querySelector("#project-add-dialog");
+  #taskEditDialog = document.querySelector("#task-edit-dialog");
   /** Array of objects { id, name, projectElement } */
   #projectElements = [];
   /** Array of objects { id, projectId, taskElement } */
@@ -25,6 +26,8 @@ export default class Display {
     document.querySelector("#task-add-close").addEventListener("click", this.#handleTaskAddClose.bind(this));
     document.querySelector("#project-add-submit").addEventListener("click", this.#handleProjectAddSubmit.bind(this));
     document.querySelector("#project-add-close").addEventListener("click", this.#handleProjectAddClose.bind(this));
+    document.querySelector("#task-edit-submit").addEventListener("click", this.#handleTaskEditSubmit.bind(this));
+    document.querySelector("#task-edit-close").addEventListener("click", this.#handleTaskEditClose.bind(this));
 
     // get data from storage, if any
     let data = this.#getData();
@@ -44,10 +47,6 @@ export default class Display {
         this.#createTaskElement(task);
       });
     });
-
-    // create task elements and add each to its project element
-
-    // populate sidebar with project buttons
 
     // load today's tasks and render them
     this.#renderProject(null);
@@ -95,6 +94,7 @@ export default class Display {
 
     // add task to projectList
     let id = this.#projectList.addTask(projectId, { name, description, dueDate });
+    
     // this.#saveData();
 
     // create task element
@@ -140,6 +140,7 @@ export default class Display {
     let name = document.querySelector("#project-add-name").value;
     
     let id = this.#projectList.addProject({ name });
+    
     // this.#saveData();
 
     this.#createProjectElement({ id, name });
@@ -184,19 +185,72 @@ export default class Display {
 
   // task edit buttons
   #handleTaskEditClick(event) {
+    document.querySelector("#task-edit-form").reset();
+
     // get task id
+    let id = event.target.parentElement.dataset.task;
+    let project = event.target.parentElement.dataset.proj;
     // get task data
-    // create popup
+    let taskData = this.#projectList.getTaskData(project, id);
+    let dueDate = taskData.dueDate;
     // populate form with task data
-    // get updated task data from form
-    // update task element
-    // if project is changed, remove task from old project and add to new project
-    // update task in projectList
+    document.querySelector("#task-edit-name").value = taskData.name;
+    document.querySelector("#task-edit-project").value = project;
+    document.querySelector("#task-edit-desc").value = taskData.description;
+    document.querySelector("#task-edit-src").value = id;
+    if (dueDate) {
+      let year = dueDate.getFullYear();
+      let month = dueDate.getMonth() + 1;
+      let day = dueDate.getDate();
+
+      if (month < 10) {
+        month = `0${month}`;
+      }
+
+      console.log(dueDate);
+      console.log(`${year}-${month}-${day}`);
+      document.querySelector("#task-edit-date").value = `${year}-${month}-${day}`;
+    }
+
+    // show dialog
+    this.#taskEditDialog.showModal();
   }
 
-  #handleTaskEditSubmit(event) {}
+  #handleTaskEditSubmit(event) {
+    event.preventDefault();
+    // get updated task data from form
+    let id = document.querySelector("#task-edit-src").value;
+    let name = document.querySelector("#task-edit-name").value;
+    let projectId = document.querySelector("#task-edit-project").value;
+    let description = document.querySelector("#task-edit-desc").value;
+    let dateString = document.querySelector("#task-edit-date").value;
+    let dueDate = null;
+    
+    if (dateString && dateString != "Invalid Date") {
+      dateString = dateString.split("-");
+      dueDate = new Date(Date.UTC(dateString[0], dateString[1] - 1, dateString[2]));
+      dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+    }
 
-  #handleTaskEditClose(event) {}
+    // update task element
+    this.#editTaskElement(id, { name, description, dueDate });
+    
+    // if project is changed, move task
+    let oldProjectId = this.#getTaskElementObject(id).projectId;
+    if (oldProjectId != projectId) {
+      this.#moveTaskElement(id, projectId);
+      this.#projectList.moveTask(oldProjectId, id, projectId);
+    }
+
+    // update task in projectList
+    this.#projectList.editTask(projectId, id, { name, description, dueDate });
+    
+    this.#taskEditDialog.close();
+  }
+
+  #handleTaskEditClose(event) {
+    this.#taskEditDialog.close();
+  }
   // project name
   // task body
 
@@ -398,12 +452,11 @@ export default class Display {
 
   #moveTaskElement(taskId, newProjectId) {
     let task = this.#getTaskElementObject(taskId);
-    let projectElement = this.#getProjectElementObject(newProjectId);
-    let oldProjectElement = this.#getProjectElementObject(task.projectId);
+    let project = this.#getProjectElementObject(newProjectId);
 
     task.projectId = newProjectId;
-    projectElement.projectElement.querySelector(".tasks").appendChild(task.taskElement);
-    oldProjectElement.projectElement.querySelector(".tasks").removeChild(task.taskElement);
+    task.taskElement.dataset.proj = newProjectId;
+    project.projectElement.querySelector(".tasks").appendChild(task.taskElement);
   }
 
   // ------------------------------ element removal ------------------------------
