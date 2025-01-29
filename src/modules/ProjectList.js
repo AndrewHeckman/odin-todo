@@ -15,6 +15,7 @@ export default class ProjectList {
   /**
    * Add a new project to the project list
    * @param {Object} projectJson object containing project data
+   * @param {Number=} projectJson.id id of project, default: null
    * @param {String} projectJson.name name of the project
    * @param {Array<Object>=} projectJson.tasks array of task objects, default: []
    * @returns {Number} the id of the new project
@@ -33,6 +34,7 @@ export default class ProjectList {
    */
   deleteProject(projectId) {
     if (!this.#findProject(projectId)) return false;
+    Project.freeID(projectId);
     this.#projects = this.#projects.filter(project => project.id != projectId);
     return true;
   }
@@ -72,6 +74,12 @@ export default class ProjectList {
     let project = this.#findProject(projectId);
     if (!project) return false;
     return project.deleteTask(taskId);
+  }
+
+  editTask(projectId, taskId, taskJson) {
+    let project = this.#findProject(projectId);
+    if (!project) return false;
+    return project.editTask(taskId, taskJson);
   }
 
   /**

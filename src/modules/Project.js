@@ -4,16 +4,22 @@ export default class Project {
   #id;
   #name;
   #tasks = [];
+  static #usedIds = [];
   static #nextId = 0;
 
   /**
    * Create a new project
    * @param {Object} projectJson object containing project data
+   * @param {Number=} projectJson.projectId id of project, default: null
    * @param {String} projectJson.name name of the project
    * @param {Array<Object>=} projectJson.tasks array of task objects, default: []
    */
-  constructor({ name, tasks = [] }) {
-    this.#id = Project.#genID();
+  constructor({ projectId=null, name, tasks = [] }) {
+    if (projectId) {
+      this.#id = projectId;
+      Project.#usedIds.push(projectId);
+    }
+    else this.#id = Project.#genID();
     this.#name = name;
     tasks.forEach(task => this.addTask(task));
   }
@@ -21,6 +27,7 @@ export default class Project {
   /**
    * Add a new task to the project
    * @param {Object} taskJson JSON object containing task data
+   * @param {Number=} taskJson.id id of task, default: null
    * @param {String} taskJson.name name of task
    * @param {String=} taskJson.description short description of task, default: null
    * @param {Date=} taskJson.creationDate date task was created, default: Date.now()
@@ -55,7 +62,17 @@ export default class Project {
    */
   deleteTask(taskId) {
     if (!this.#findTask(taskId)) return false;
+    Task.freeID(taskId);
     this.#tasks = this.#tasks.filter(task => task.id != taskId);
+    return true;
+  }
+
+  editTask(taskId, taskJson) {
+    let task = this.#findTask(taskId);
+    if (!task) return false;
+    if (taskJson.name) task.name = taskJson.name;
+    if (taskJson.description) task.description = taskJson.description;
+    if (taskJson.dueDate) task.dueDate = taskJson.dueDate;
     return true;
   }
 
@@ -135,7 +152,13 @@ export default class Project {
    * @returns {Number} the next available id
    */
   static #genID() {
+    while (Project.#usedIds.includes(Project.#nextId)) Project.#nextId++;
+    Project.#usedIds.push(Project.#nextId);
     return Project.#nextId++;
+  }
+
+  static freeID(id) {
+    Project.#usedIds = Project.#usedIds.filter(usedId => usedId != id);
   }
 
   get id() { return this.#id; }

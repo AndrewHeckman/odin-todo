@@ -6,11 +6,13 @@ export default class Task {
   #creationDate;
   #dueDate;
   #completed;
+  static #usedIds = [];
   static #nextId = 0;
 
   /**
    * Create a new task
    * @param {Object} taskJson object containing task data
+   * @param {Number=} taskJson.id id of task, default: null
    * @param {String} taskJson.projectId id of parent project
    * @param {String} taskJson.name name of task
    * @param {String=} taskJson.description short description of task, default: null
@@ -18,8 +20,12 @@ export default class Task {
    * @param {Date=} taskJson.dueDate date task is due, default: null
    * @param {Boolean=} taskJson.completed status of task, default: false
    */
-  constructor({ projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false }) {
-    this.#id = Task.#genID();
+  constructor({ id=null, projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false }) {
+    if (id) {
+      this.#id = id;
+      Task.#usedIds.push(id);
+    }
+    else this.#id = Task.#genID();
     this.#projectId = projectId;
     this.#name = name;
     this.#description = description;
@@ -57,7 +63,19 @@ export default class Task {
    * Generate new id for task
    * @returns {Number} the next available id
    */
-  static #genID() { return Task.#nextId++; }
+  static #genID() {
+    while (Task.#usedIds.includes(Task.#nextId)) Task.#nextId++;
+    Task.#usedIds.push(Task.#nextId);
+    return Task.#nextId++;
+  }
+
+  /**
+   * Free an id for reuse
+   * @param {Number} id id to free
+   */
+  static freeID(id) {
+    Task.#usedIds = Task.#usedIds.filter(usedId => usedId !== id);
+  }
 
   /* ------------------------- Getters ------------------------- */
   get id() { return this.#id; }
