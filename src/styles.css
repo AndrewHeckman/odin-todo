@@ -92,6 +92,10 @@ main {
   color: white;
 }
 
+.complete .task-text{
+  text-decoration: line-through;
+}
+
 .checkbox {
   height: 1.25rem;
   aspect-ratio: 1 / 1;
@@ -104,6 +108,14 @@ main {
 
 .checkbox:hover {
   color: white;
+}
+
+.complete .checkbox {
+  color: white;
+}
+
+.complete .checkbox:hover {
+  color: transparent;
 }
 
 .task-text {
