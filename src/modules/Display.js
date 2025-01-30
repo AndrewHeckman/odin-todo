@@ -360,7 +360,7 @@ export default class Display {
     let taskName = document.createElement("p");
     let taskDescription; // optional
     let taskDueDate; // optional
-    let taskEdit = document.createElement("button");
+    let taskDelete = document.createElement("button");
 
     taskElement.classList.add("grid");
     taskElement.classList.add("task");
@@ -376,6 +376,9 @@ export default class Display {
 
     taskText.classList.add("task-text");
     taskText.id = `t${id}-text`;
+    taskText.dataset.task = id;
+    taskText.dataset.proj = projectId;
+    taskText.addEventListener("click", this.#handleTaskEditClick.bind(this));
     taskElement.appendChild(taskText);
 
     taskName.classList.add("task-name");
@@ -399,11 +402,11 @@ export default class Display {
       taskElement.appendChild(taskDueDate);
     }
 
-    taskEdit.classList.add("task-edit");
-    taskEdit.id = `t${id}-edit`;
-    taskEdit.textContent = "Edit";
-    taskEdit.addEventListener("click", this.#handleTaskEditClick.bind(this));
-    taskElement.appendChild(taskEdit);
+    taskDelete.classList.add("task-delete");
+    taskDelete.id = `t${id}-delete`;
+    taskDelete.textContent = "Delete";
+    taskDelete.addEventListener("click", this.#handleTaskDeleteClick.bind(this));
+    taskElement.appendChild(taskDelete);
 
     this.#taskElements.push({ id, projectId, taskElement });
 
@@ -481,14 +484,36 @@ export default class Display {
 
   #editTaskElement(taskId, { name, description, dueDate }) {
     let task = this.#getTaskElementObject(taskId).taskElement;
-    if (name) {
-      task.querySelector(".task-name").textContent = name;
-    }
+    let descElement = task.querySelector(".task-desc");
+    let dueDateElement = task.querySelector(".task-date");
+    task.querySelector(".task-name").textContent = name;
     if (description) {
-      task.querySelector(".task-desc").textContent = description;
+      if (descElement) descElement.textContent = description;
+      else {
+        descElement = document.createElement("p");
+        descElement.classList.add("task-desc");
+        descElement.id = `t${taskId}-desc`;
+        descElement.textContent = description;
+        task.querySelector(".task-text").appendChild(descElement);
+      }
+    }
+    else if (descElement) { 
+      descElement.remove();
     }
     if (dueDate) {
-      task.querySelector(".task-date").textContent = dueDate.toDateString();
+      if (dueDateElement) dueDateElement.textContent = dueDate.toDateString();
+      else {
+        dueDateElement = document.createElement("p");
+        dueDateElement.classList.add("task-date");
+        dueDateElement.id = `t${taskId}-date`;
+        dueDateElement.textContent = dueDate.toDateString();
+
+        // add due date before delete button
+        task.insertBefore(dueDateElement, task.querySelector(".task-delete"));
+      }
+    }
+    else if (dueDateElement) {
+      dueDateElement.remove();
     }
   }
 

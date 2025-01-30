@@ -135,7 +135,7 @@ main {
   margin: auto;
 }
 
-.task-edit, .p-add-task-btn {
+.task-delete, .p-add-task-btn {
   width: fit-content;
   border: none;
   color: white;
@@ -143,7 +143,7 @@ main {
   font-size: medium;
 }
 
-.task-edit {
+.task-delete {
   margin: auto;
   grid-column: 4 / 5;
 }

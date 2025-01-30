@@ -70,9 +70,9 @@ export default class Project {
   editTask(taskId, taskJson) {
     let task = this.#findTask(taskId);
     if (!task) return false;
-    if (taskJson.name) task.name = taskJson.name;
-    if (taskJson.description) task.description = taskJson.description;
-    if (taskJson.dueDate) task.dueDate = taskJson.dueDate;
+    task.name = taskJson.name;
+    task.description = taskJson.description;
+    task.dueDate = taskJson.dueDate;
     return true;
   }
 
