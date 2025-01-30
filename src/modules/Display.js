@@ -8,6 +8,7 @@ export default class Display {
   #taskAddDialog = document.querySelector("#task-add-dialog");
   #projectAddDialog = document.querySelector("#project-add-dialog");
   #taskEditDialog = document.querySelector("#task-edit-dialog");
+  #projectEditDialog = document.querySelector("#project-edit-dialog");
   /** Array of objects { id, name, projectElement } */
   #projectElements = [];
   /** Array of objects { id, projectId, taskElement } */
@@ -28,6 +29,8 @@ export default class Display {
     document.querySelector("#project-add-close").addEventListener("click", this.#handleProjectAddClose.bind(this));
     document.querySelector("#task-edit-submit").addEventListener("click", this.#handleTaskEditSubmit.bind(this));
     document.querySelector("#task-edit-close").addEventListener("click", this.#handleTaskEditClose.bind(this));
+    document.querySelector("#project-edit-submit").addEventListener("click", this.#handleProjectEditSubmit.bind(this));
+    document.querySelector("#project-edit-close").addEventListener("click", this.#handleProjectEditClose.bind(this));
 
     // get data from storage, if any
     let data = this.#getData();
@@ -251,8 +254,47 @@ export default class Display {
   #handleTaskEditClose(event) {
     this.#taskEditDialog.close();
   }
-  // project name
-  // task body
+
+  // click on project name to edit
+  #handleProjectEditClick(event) {
+    document.querySelector("#project-edit-form").reset();
+
+    let id = event.target.parentElement.dataset.proj;
+    let name = this.#projectList.getProjectData(id).name;
+
+    document.querySelector("#project-edit-name").value = name;
+    document.querySelector("#project-edit-src").value = id;
+
+    this.#projectEditDialog.showModal();
+  }
+
+  #handleProjectEditSubmit(event) {
+    event.preventDefault();
+    let id = document.querySelector("#project-edit-src").value;
+    let name = document.querySelector("#project-edit-name").value;
+
+    this.#editProjectElementName(id, name);
+    this.#projectList.editProjectName(id, name);
+
+    this.#projectEditDialog.close();
+  }
+
+  #handleProjectEditClose(event) {
+    this.#projectEditDialog.close();
+  }
+
+  // change edit button to delete, change task click to edit
+  #handleTaskDeleteClick(event) {}
+  #handleTaskDeleteSubmit(event) {}
+  #handleTaskDeleteClose(event) {}
+
+  // add delete project button
+  #handleProjectDeleteClick(event) {}
+  // delete project and move tasks to inbox
+  #handleProjectDeleteInbox(event) {}
+  // delete project and tasks
+  #handleProjectDeleteFull(event) {}
+  #handleProjectDeleteClose(event) {}
 
   // ------------------------------ element creation ------------------------------
 
@@ -272,10 +314,12 @@ export default class Display {
 
     projectElement.classList.add("project");
     projectElement.id = `p${id}`;
+    projectElement.dataset.proj = id;
 
     projectName.classList.add("project-name");
     projectName.id = `p${id}-name`;
     projectName.textContent = name;
+    projectName.addEventListener("click", this.#handleProjectEditClick.bind(this));
     projectElement.appendChild(projectName);
 
     taskDiv.classList.add("tasks");
@@ -430,6 +474,9 @@ export default class Display {
   #editProjectElementName(projectId, newName) {
     let project = this.#getProjectElementObject(projectId).projectElement;
     project.querySelector(".project-name").textContent = newName;
+    document.querySelector(`#p${projectId}-btn`).textContent = newName;
+    document.querySelector(`#task-add-p${projectId}`).textContent = newName;
+    document.querySelector(`#task-edit-p${projectId}`).textContent = newName;
   }
 
   #editTaskElement(taskId, { name, description, dueDate }) {

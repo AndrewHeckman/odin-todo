@@ -84,6 +84,11 @@ main {
   color: white;
 }
 
+.project-name,
+.task-name {
+  cursor: pointer;
+}
+
 .task {
   border-bottom: 1px solid white;
   padding: 0.5rem 0;

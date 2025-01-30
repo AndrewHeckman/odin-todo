@@ -115,5 +115,17 @@
       </form>
       <button id="task-edit-close">Close</button>
     </dialog>
+    <dialog id="project-edit-dialog" class="popup">
+      <form id="project-edit-form" name="project-edit-form" action="index.html">
+        <h2>Rename project</h2>
+        <div>
+          <label for="project-edit-name">Name:</label>
+          <input type="text" id="project-edit-name" name="project-edit-name" autocomplete="off" required>
+        </div>
+        <button type="submit" id="project-edit-submit">Submit</button>
+        <input type="hidden" id="project-edit-src" name="project-edit-src" value="0">
+      </form>
+      <button id="project-edit-close">Close</button>
+    </dialog>
   </body>
 </html>
