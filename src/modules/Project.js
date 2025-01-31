@@ -15,7 +15,7 @@ export default class Project {
    * @param {Array<Object>=} projectJson.tasks array of task objects, default: []
    */
   constructor({ projectId=null, name, tasks = [] }) {
-    if (projectId) {
+    if (projectId != null) {
       this.#id = projectId;
       Project.#usedIds.push(projectId);
     }

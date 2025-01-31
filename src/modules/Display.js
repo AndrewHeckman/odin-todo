@@ -2,21 +2,31 @@ import ProjectList from "./ProjectList";
 
 export default class Display {
   #projectList;
-  #sidebarList = document.querySelector("#project-list");
-  #todayElement = document.querySelector("#today");
-  #todayTasks = document.querySelector("#today-tasks");
-  #taskAddDialog = document.querySelector("#task-add-dialog");
-  #projectAddDialog = document.querySelector("#project-add-dialog");
-  #taskEditDialog = document.querySelector("#task-edit-dialog");
-  #projectEditDialog = document.querySelector("#project-edit-dialog");
-  #taskDeleteDialog = document.querySelector("#task-delete-dialog");
-  // #projectDeleteDialog = document.querySelector("#project-delete-dialog");
+  #sidebarList;
+  #todayElement;
+  #todayTasks;
+  #taskAddDialog;
+  #projectAddDialog;
+  #taskEditDialog;
+  #projectEditDialog;
+  #taskDeleteDialog;
+  #projectDeleteDialog;
   /** Array of objects { id, name, projectElement } */
   #projectElements = [];
   /** Array of objects { id, projectId, taskElement } */
   #taskElements = [];
 
   constructor() {
+    this.#sidebarList = document.querySelector("#project-list");
+    this.#todayElement = document.querySelector("#today");
+    this.#todayTasks = document.querySelector("#today-tasks");
+    this.#taskAddDialog = document.querySelector("#task-add-dialog");
+    this.#projectAddDialog = document.querySelector("#project-add-dialog");
+    this.#taskEditDialog = document.querySelector("#task-edit-dialog");
+    this.#projectEditDialog = document.querySelector("#project-edit-dialog");
+    this.#taskDeleteDialog = document.querySelector("#task-delete-dialog");
+    this.#projectDeleteDialog = document.querySelector("#project-delete-dialog");
+    
     // add sidebar button event listeners
     document.querySelector("#add-task-btn").addEventListener("click", this.#handleTaskAddClick.bind(this));
     document.querySelector("#today-add-task-btn").addEventListener("click", this.#handleTaskAddClick.bind(this));
@@ -35,6 +45,9 @@ export default class Display {
     document.querySelector("#project-edit-close").addEventListener("click", this.#handleProjectEditClose.bind(this));
     document.querySelector("#task-delete-submit").addEventListener("click", this.#handleTaskDeleteSubmit.bind(this));
     document.querySelector("#task-delete-close").addEventListener("click", this.#handleTaskDeleteClose.bind(this));
+    document.querySelector("#project-delete-submit").addEventListener("click", this.#handleProjectDeleteFull.bind(this));
+    document.querySelector("#project-delete-move").addEventListener("click", this.#handleProjectDeleteMove.bind(this));
+    document.querySelector("#project-delete-close").addEventListener("click", this.#handleProjectDeleteClose.bind(this));
 
     // get data from storage, if any
     let data = this.#getData();
@@ -315,13 +328,77 @@ export default class Display {
     this.#taskDeleteDialog.close();
   }
 
-  // add delete project button
-  #handleProjectDeleteClick(event) {}
+  
+  #handleProjectDeleteClick(event) {
+    let id = event.target.parentElement.dataset.proj;
+    document.querySelector("#project-delete-src").value = id;
+    this.#projectDeleteDialog.showModal();
+  }
+
   // delete project and move tasks to inbox
-  #handleProjectDeleteInbox(event) {}
+  #handleProjectDeleteMove(event) {
+    event.preventDefault();
+
+    let id = document.querySelector("#project-delete-src").value;
+    let project = this.#getProjectElementObject(id);
+    let tasks = this.#taskElements.filter(task => task.projectId == id);
+
+    tasks.forEach(task => {
+      this.#moveTaskElement(task.id, 0);
+      this.#projectList.moveTask(id, task.id, 0);
+    });
+
+    // remove project from projectList
+    this.#projectList.deleteProject(id);
+    // remove project from sidebar
+    document.querySelector(`#p${id}-btn`).remove();
+    // remove project from project select
+    document.querySelector(`#task-add-p${id}`).remove();
+    document.querySelector(`#task-edit-p${id}`).remove();
+    // remove project from project elements array
+    this.#projectElements = this.#projectElements.filter(project => project.id != id);
+    
+    // close dialog
+    this.#projectDeleteDialog.close();
+    // render inbox
+    this.#renderProject(0);
+
+    console.log(this.#projectList.toJson());
+
+    // remove project element
+    project.projectElement.remove();
+  }
+
   // delete project and tasks
-  #handleProjectDeleteFull(event) {}
-  #handleProjectDeleteClose(event) {}
+  #handleProjectDeleteFull(event) {
+    event.preventDefault();
+
+    let id = document.querySelector("#project-delete-src").value;
+    let project = this.#getProjectElementObject(id);
+
+    this.#taskElements = this.#taskElements.filter(task => task.projectId != id);
+    // remove project from projectList
+    this.#projectList.deleteProject(id);
+    // remove project from sidebar
+    document.querySelector(`#p${id}-btn`).remove();
+    // remove project from project select
+    document.querySelector(`#task-add-p${id}`).remove();
+    document.querySelector(`#task-edit-p${id}`).remove();
+    // remove project from project elements array
+    this.#projectElements = this.#projectElements.filter(project => project.id != id);
+
+    // close dialog
+    this.#projectDeleteDialog.close();
+    // render inbox
+    this.#renderProject(null);
+
+    // remove project element
+    project.projectElement.remove();
+  }
+
+  #handleProjectDeleteClose(event) {
+    this.#projectDeleteDialog.close();
+  }
 
   // ------------------------------ element creation ------------------------------
 
@@ -338,6 +415,7 @@ export default class Display {
     let projectName = document.createElement("h1");
     let taskDiv = document.createElement("div");
     let button = document.createElement("button");
+    let deleteButton = document.createElement("button");
 
     projectElement.classList.add("project");
     projectElement.id = `p${id}`;
@@ -346,7 +424,7 @@ export default class Display {
     projectName.classList.add("project-name");
     projectName.id = `p${id}-name`;
     projectName.textContent = name;
-    projectName.addEventListener("click", this.#handleProjectEditClick.bind(this));
+    if (id != 0) projectName.addEventListener("click", this.#handleProjectEditClick.bind(this));
     projectElement.appendChild(projectName);
 
     taskDiv.classList.add("tasks");
@@ -363,6 +441,15 @@ export default class Display {
     button.dataset.proj = id;
     button.addEventListener("click", this.#handleTaskAddClick.bind(this));
     projectElement.appendChild(button);
+
+    if (id != 0) {
+      deleteButton.classList.add("p-delete-btn");
+      deleteButton.textContent = "Delete project";
+      deleteButton.id = `p${id}-delete-btn`;
+      deleteButton.dataset.proj = id;
+      deleteButton.addEventListener("click", this.#handleProjectDeleteClick.bind(this));
+      projectElement.appendChild(deleteButton);
+    }
 
     this.#projectElements.push({ id, name, projectElement });
 
@@ -555,14 +642,9 @@ export default class Display {
 
     task.projectId = newProjectId;
     task.taskElement.dataset.proj = newProjectId;
+    task.taskElement.querySelector(".task-text").dataset.proj = newProjectId;
     project.projectElement.querySelector(".tasks").appendChild(task.taskElement);
   }
-
-  // ------------------------------ element removal ------------------------------
-
-  #removeProjectElement(projectId) {}
-
-  #removeTaskElement(taskId) {}
 
   // ------------------------------ rendering ------------------------------
 
@@ -572,7 +654,7 @@ export default class Display {
    */
   #renderProject(projectId=null) {
     let projectElement;
-    if (projectId) {
+    if (projectId != null) {
       projectElement = this.#getProjectElementObject(projectId).projectElement;
       
       this.#taskElements.forEach(task => {

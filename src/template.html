@@ -136,5 +136,15 @@
       </form>
       <button id="task-delete-close">Close</button>
     </dialog>
+    <dialog id="project-delete-dialog" class="popup">
+      <form id="project-delete-form" name="project-delete-form" action="index.html">
+        <h2>Delete project</h2>
+        <p>Do you want to delete this project's tasks or move them to the inbox?</p>
+        <button type="submit" id="project-delete-submit">Delete</button>
+        <button type="submit" id="project-delete-move">Move to inbox</button>
+        <input type="hidden" id="project-delete-src" name="project-delete-src" value="0">
+      </form>
+      <button id="project-delete-close">Close</button>
+    </dialog>
   </body>
 </html>

@@ -135,7 +135,7 @@ main {
   margin: auto;
 }
 
-.task-delete, .p-add-task-btn {
+.task-delete, .p-add-task-btn, .p-delete-btn {
   width: fit-content;
   border: none;
   color: white;
@@ -148,8 +148,12 @@ main {
   grid-column: 4 / 5;
 }
 
-.p-add-task-btn {
+.p-add-task-btn, .p-delete-btn {
   margin-top: 0.5rem;
+}
+
+.p-delete-btn {
+  display: block;
 }
 
 .popup {

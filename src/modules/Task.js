@@ -21,7 +21,7 @@ export default class Task {
    * @param {Boolean=} taskJson.completed status of task, default: false
    */
   constructor({ id=null, projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false }) {
-    if (id) {
+    if (id != null) {
       this.#id = id;
       Task.#usedIds.push(id);
     }
