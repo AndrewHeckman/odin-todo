@@ -9,6 +9,8 @@ export default class Display {
   #projectAddDialog = document.querySelector("#project-add-dialog");
   #taskEditDialog = document.querySelector("#task-edit-dialog");
   #projectEditDialog = document.querySelector("#project-edit-dialog");
+  #taskDeleteDialog = document.querySelector("#task-delete-dialog");
+  // #projectDeleteDialog = document.querySelector("#project-delete-dialog");
   /** Array of objects { id, name, projectElement } */
   #projectElements = [];
   /** Array of objects { id, projectId, taskElement } */
@@ -31,6 +33,8 @@ export default class Display {
     document.querySelector("#task-edit-close").addEventListener("click", this.#handleTaskEditClose.bind(this));
     document.querySelector("#project-edit-submit").addEventListener("click", this.#handleProjectEditSubmit.bind(this));
     document.querySelector("#project-edit-close").addEventListener("click", this.#handleProjectEditClose.bind(this));
+    document.querySelector("#task-delete-submit").addEventListener("click", this.#handleTaskDeleteSubmit.bind(this));
+    document.querySelector("#task-delete-close").addEventListener("click", this.#handleTaskDeleteClose.bind(this));
 
     // get data from storage, if any
     let data = this.#getData();
@@ -283,10 +287,33 @@ export default class Display {
     this.#projectEditDialog.close();
   }
 
-  // change edit button to delete, change task click to edit
-  #handleTaskDeleteClick(event) {}
-  #handleTaskDeleteSubmit(event) {}
-  #handleTaskDeleteClose(event) {}
+  #handleTaskDeleteClick(event) {
+    let id = event.target.parentElement.dataset.task;
+    document.querySelector("#task-delete-src").value = id;
+    this.#taskDeleteDialog.showModal();
+  }
+
+  #handleTaskDeleteSubmit(event) {
+    event.preventDefault();
+
+    console.log(this.#projectList.toJson());
+    
+    let id = document.querySelector("#task-delete-src").value;
+    let task = this.#getTaskElementObject(id);
+    let projectId = task.projectId;
+
+    task.taskElement.remove();
+    this.#projectList.deleteTask(projectId, id);
+    this.#taskElements = this.#taskElements.filter(task => task.id != id);
+
+    console.log(this.#projectList.toJson());
+
+    this.#taskDeleteDialog.close();
+  }
+
+  #handleTaskDeleteClose(event) {
+    this.#taskDeleteDialog.close();
+  }
 
   // add delete project button
   #handleProjectDeleteClick(event) {}
