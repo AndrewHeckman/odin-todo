@@ -62,10 +62,6 @@ export default class Display {
         this.#addSidebarButton(project);
         this.#addProjectSelectOption(project);
       }
-
-      project.tasks.forEach(task => {
-        this.#createTaskElement(task);
-      });
     });
 
     // load today's tasks and render them
@@ -107,15 +103,14 @@ export default class Display {
     let src = document.querySelector("#task-add-src").value;
     
     if (dateString && dateString != "Invalid Date") {
-      dateString = dateString.split("-");
-      dueDate = new Date(Date.UTC(dateString[0], dateString[1] - 1, dateString[2]));
-      dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+      dateString = `${dateString}T00:00:00`;
+      dueDate = new Date(dateString);
     }
 
     // add task to projectList
     let id = this.#projectList.addTask(projectId, { name, description, dueDate });
     
-    // this.#saveData();
+    this.#saveData();
 
     // create task element
     this.#createTaskElement({ id, projectId, name, description, dueDate });
@@ -162,7 +157,7 @@ export default class Display {
     
     let id = this.#projectList.addProject({ name });
     
-    // this.#saveData();
+    this.#saveData();
 
     this.#createProjectElement({ id, name });
     this.#addSidebarButton({ id, name });
@@ -203,6 +198,8 @@ export default class Display {
     this.#toggleTaskElement(id);
     // update task in projectList
     this.#projectList.toggleTask(project, id);
+    
+    this.#saveData();
   }
 
   // task edit buttons
@@ -229,8 +226,10 @@ export default class Display {
         month = `0${month}`;
       }
 
-      console.log(dueDate);
-      console.log(`${year}-${month}-${day}`);
+      if (day < 10) {
+        day = `0${day}`;
+      }
+
       document.querySelector("#task-edit-date").value = `${year}-${month}-${day}`;
     }
 
@@ -249,9 +248,8 @@ export default class Display {
     let dueDate = null;
     
     if (dateString && dateString != "Invalid Date") {
-      dateString = dateString.split("-");
-      dueDate = new Date(Date.UTC(dateString[0], dateString[1] - 1, dateString[2]));
-      dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+      dateString = `${dateString}T00:00:00`;
+      dueDate = new Date(dateString);
     }
 
     // update task element
@@ -267,6 +265,8 @@ export default class Display {
     // update task in projectList
     this.#projectList.editTask(projectId, id, { name, description, dueDate });
     
+    this.#saveData();
+
     this.#taskEditDialog.close();
   }
 
@@ -296,6 +296,8 @@ export default class Display {
     this.#editProjectElementName(id, name);
     this.#projectList.editProjectName(id, name);
 
+    this.#saveData();
+
     this.#projectEditDialog.close();
   }
 
@@ -312,18 +314,17 @@ export default class Display {
 
   #handleTaskDeleteSubmit(event) {
     event.preventDefault();
-
-    console.log(this.#projectList.toJson());
     
     let id = document.querySelector("#task-delete-src").value;
     let task = this.#getTaskElementObject(id);
     let projectId = task.projectId;
 
     task.taskElement.remove();
-    this.#projectList.deleteTask(projectId, id);
     this.#taskElements = this.#taskElements.filter(task => task.id != id);
+    
+    this.#projectList.deleteTask(projectId, id);
 
-    console.log(this.#projectList.toJson());
+    this.#saveData();
 
     this.#taskDeleteDialog.close();
   }
@@ -368,7 +369,7 @@ export default class Display {
     // render inbox
     this.#renderProject(0);
 
-    console.log(this.#projectList.toJson());
+    this.#saveData();
 
     // remove project element
     project.projectElement.remove();
@@ -397,6 +398,8 @@ export default class Display {
     // render inbox
     this.#renderProject(null);
 
+    this.#saveData();
+
     // remove project element
     project.projectElement.remove();
   }
@@ -423,6 +426,8 @@ export default class Display {
     let button = document.createElement("button");
     let deleteButton = document.createElement("button");
 
+    this.#projectElements.push({ id, name, projectElement });
+
     projectElement.classList.add("project");
     projectElement.id = `p${id}`;
     projectElement.dataset.proj = id;
@@ -435,11 +440,10 @@ export default class Display {
 
     taskDiv.classList.add("tasks");
     taskDiv.id = `p${id}-tasks`;
-    tasks.forEach(task => {
-      let taskElement = this.#createTaskElement(task);
-      taskDiv.appendChild(taskElement);
-    });
     projectElement.appendChild(taskDiv);
+    tasks.forEach(task => {
+      this.#createTaskElement(task);
+    });
 
     button.classList.add("p-add-task-btn");
     button.textContent = "Add task";
@@ -456,8 +460,6 @@ export default class Display {
       deleteButton.addEventListener("click", this.#handleProjectDeleteClick.bind(this));
       projectElement.appendChild(deleteButton);
     }
-
-    this.#projectElements.push({ id, name, projectElement });
 
     return projectElement;
   }
@@ -481,6 +483,9 @@ export default class Display {
     let taskDescription; // optional
     let taskDueDate; // optional
     let taskDelete = document.createElement("button");
+
+    this.#taskElements.push({ id, projectId, taskElement });
+    this.#projectElements.find(project => project.id == projectId).projectElement.querySelector(".tasks").appendChild(taskElement);
 
     taskElement.classList.add("grid");
     taskElement.classList.add("task");
@@ -515,6 +520,8 @@ export default class Display {
     }
 
     if (dueDate && dueDate != "Invalid Date") {
+      if (!(dueDate instanceof Date)) dueDate = new Date(dueDate);
+
       taskDueDate = document.createElement("p");
       taskDueDate.classList.add("task-date");
       taskDueDate.id = `t${id}-date`;
@@ -527,10 +534,6 @@ export default class Display {
     taskDelete.textContent = "Delete";
     taskDelete.addEventListener("click", this.#handleTaskDeleteClick.bind(this));
     taskElement.appendChild(taskDelete);
-
-    this.#taskElements.push({ id, projectId, taskElement });
-
-    this.#projectElements.find(project => project.id == projectId).projectElement.querySelector(".tasks").appendChild(taskElement);
 
     return taskElement;
   }
@@ -607,6 +610,7 @@ export default class Display {
     let descElement = task.querySelector(".task-desc");
     let dueDateElement = task.querySelector(".task-date");
     task.querySelector(".task-name").textContent = name;
+    
     if (description) {
       if (descElement) descElement.textContent = description;
       else {
@@ -620,7 +624,9 @@ export default class Display {
     else if (descElement) { 
       descElement.remove();
     }
+
     if (dueDate) {
+      if (!(dueDate instanceof Date)) dueDate = new Date(dueDate);
       if (dueDateElement) dueDateElement.textContent = dueDate.toDateString();
       else {
         dueDateElement = document.createElement("p");
@@ -706,6 +712,7 @@ export default class Display {
   }
 
   #saveData() {
+    console.log(this.#projectList.toJson());
     localStorage.setItem("projectList", JSON.stringify(this.#projectList.toJson()));
   }
 }

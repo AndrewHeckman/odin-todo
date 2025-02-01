@@ -29,8 +29,8 @@ export default class Task {
     this.#projectId = projectId;
     this.#name = name;
     this.#description = description;
-    this.#creationDate = creationDate;
-    this.#dueDate = dueDate;
+    this.#creationDate = new Date(creationDate);
+    this.#dueDate = new Date(dueDate);
     this.#completed = completed;
   }
 
