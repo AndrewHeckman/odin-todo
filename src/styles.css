@@ -14,14 +14,8 @@
   --mouseover: #ff4444a8;
   --selected: #ff444454;
   --important: #ff4444;
-  --text: white;
-  /* --primary-background: white;
-  --secondary-background: white;
-  --primary: #004225;
-  --mouseover: #004225a8;
-  --selected: #00422554;
-  --important: #004225;
-  --text: black; */
+  --body-text: white;
+  --sidebar-text: white;
 }
 
 .flex {
@@ -67,12 +61,12 @@ button:active {
 }
 
 .nav-btn, .separator {
-  color: var(--text);
+  color: var(--sidebar-text);
   padding: 0.5rem 1rem;
 }
 
 .separator {
-  border-bottom: 1px solid var(--text);
+  border-bottom: 1px solid var(--sidebar-text);
   margin-top: 2rem;
   font-weight: bold;
 }
@@ -88,7 +82,7 @@ main {
 }
 
 .project-name {
-  color: var(--text);
+  color: var(--body-text);
 }
 
 .project-name,
@@ -97,7 +91,7 @@ main {
 }
 
 .task {
-  border-bottom: 1px solid var(--text);
+  border-bottom: 1px solid var(--body-text);
   padding: 0.5rem 0;
   grid-template-columns: 2rem 1fr 8em 4em;
   grid-template-rows: 1fr;
@@ -112,18 +106,18 @@ main {
   height: 1.25rem;
   aspect-ratio: 1 / 1;
   margin: auto;
-  border: 2px solid var(--text);
+  border: 2px solid var(--body-text);
   border-radius: 0.625rem;
   background-color: inherit;
   color: var(--primary-background);
 }
 
 .checkbox:hover {
-  color: var(--text);
+  color: var(--body-text);
 }
 
 .complete .checkbox {
-  color: var(--text);
+  color: var(--body-text);
 }
 
 .complete .checkbox:hover {
@@ -145,7 +139,7 @@ main {
 .task-delete, .p-add-task-btn, .p-delete-btn {
   width: fit-content;
   border: none;
-  color: var(--text);
+  color: var(--sidebar-text);
   background-color: inherit;
   font-size: medium;
 }
@@ -171,8 +165,8 @@ main {
   margin: 7rem auto;
   padding: 1rem;
   background-color: var(--secondary-background);
-  color: var(--text);
-  border: 2px solid var(--text);
+  color: var(--sidebar-text);
+  border: 2px solid var(--body-text);
 }
 
 label {
@@ -182,9 +176,9 @@ label {
 
 input, select, textarea {
   background-color: var(--primary-background);
-  color: var(--text);
+  color: var(--body-text);
   border: 0;
-  border: 1px solid var(--text);
+  border: 1px solid var(--body-text);
   border-radius: 0.25rem;
   padding: 0.25rem;
 }
@@ -196,7 +190,7 @@ input:focus, select:focus, textarea:focus {
   width: fit-content;
   border: none;
   border-radius: 0.25rem;
-  color: var(--text);
+  color: var(--sidebar-text);
   background-color: inherit;
   font-size: medium;
   margin: 0.5rem 0 0 0;
