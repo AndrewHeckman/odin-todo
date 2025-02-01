@@ -26,7 +26,7 @@ export default class Display {
     this.#projectEditDialog = document.querySelector("#project-edit-dialog");
     this.#taskDeleteDialog = document.querySelector("#task-delete-dialog");
     this.#projectDeleteDialog = document.querySelector("#project-delete-dialog");
-    
+
     // add sidebar button event listeners
     document.querySelector("#add-task-btn").addEventListener("click", this.#handleTaskAddClick.bind(this));
     document.querySelector("#today-add-task-btn").addEventListener("click", this.#handleTaskAddClick.bind(this));
@@ -137,6 +137,7 @@ export default class Display {
    * @param {Event} event 
    */
   #handleTaskAddClose(event) {
+    event.preventDefault();
     this.#taskAddDialog.close();
   }
 
@@ -175,6 +176,7 @@ export default class Display {
    * @param {Event} event 
    */
   #handleProjectAddClose(event) {
+    event.preventDefault();
     this.#projectAddDialog.close();
   }
 
@@ -269,6 +271,7 @@ export default class Display {
   }
 
   #handleTaskEditClose(event) {
+    event.preventDefault();
     this.#taskEditDialog.close();
   }
 
@@ -297,6 +300,7 @@ export default class Display {
   }
 
   #handleProjectEditClose(event) {
+    event.preventDefault();
     this.#projectEditDialog.close();
   }
 
@@ -325,6 +329,7 @@ export default class Display {
   }
 
   #handleTaskDeleteClose(event) {
+    event.preventDefault();
     this.#taskDeleteDialog.close();
   }
 
@@ -397,6 +402,7 @@ export default class Display {
   }
 
   #handleProjectDeleteClose(event) {
+    event.preventDefault();
     this.#projectDeleteDialog.close();
   }
 

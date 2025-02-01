@@ -14,7 +14,14 @@
   --mouseover: #ff4444a8;
   --selected: #ff444454;
   --important: #ff4444;
-  /* #8b2e2e */
+  --text: white;
+  /* --primary-background: white;
+  --secondary-background: white;
+  --primary: #004225;
+  --mouseover: #004225a8;
+  --selected: #00422554;
+  --important: #004225;
+  --text: black; */
 }
 
 .flex {
@@ -60,12 +67,12 @@ button:active {
 }
 
 .nav-btn, .separator {
-  color: white;
+  color: var(--text);
   padding: 0.5rem 1rem;
 }
 
 .separator {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--text);
   margin-top: 2rem;
   font-weight: bold;
 }
@@ -81,7 +88,7 @@ main {
 }
 
 .project-name {
-  color: white;
+  color: var(--text);
 }
 
 .project-name,
@@ -90,7 +97,7 @@ main {
 }
 
 .task {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--text);
   padding: 0.5rem 0;
   grid-template-columns: 2rem 1fr 8em 4em;
   grid-template-rows: 1fr;
@@ -105,18 +112,18 @@ main {
   height: 1.25rem;
   aspect-ratio: 1 / 1;
   margin: auto;
-  border: 2px solid white;
+  border: 2px solid var(--text);
   border-radius: 0.625rem;
   background-color: inherit;
   color: var(--primary-background);
 }
 
 .checkbox:hover {
-  color: white;
+  color: var(--text);
 }
 
 .complete .checkbox {
-  color: white;
+  color: var(--text);
 }
 
 .complete .checkbox:hover {
@@ -138,7 +145,7 @@ main {
 .task-delete, .p-add-task-btn, .p-delete-btn {
   width: fit-content;
   border: none;
-  color: white;
+  color: var(--text);
   background-color: inherit;
   font-size: medium;
 }
@@ -146,10 +153,14 @@ main {
 .task-delete {
   margin: auto;
   grid-column: 4 / 5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .p-add-task-btn, .p-delete-btn {
   margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .p-delete-btn {
@@ -160,15 +171,34 @@ main {
   margin: 7rem auto;
   padding: 1rem;
   background-color: var(--secondary-background);
-  color: white;
-  border: 0;
+  color: var(--text);
+  border: 2px solid var(--text);
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0 0.25rem 0;
 }
 
 input, select, textarea {
   background-color: var(--primary-background);
-  color: white;
+  color: var(--text);
   border: 0;
-  border: 1px solid white;
+  border: 1px solid var(--text);
   border-radius: 0.25rem;
   padding: 0.25rem;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--primary)
+}
+
+.popup-btn {
+  width: fit-content;
+  border: none;
+  border-radius: 0.25rem;
+  color: var(--text);
+  background-color: inherit;
+  font-size: medium;
+  margin: 0.5rem 0 0 0;
+  padding: 0.25rem 0.5rem;
 }

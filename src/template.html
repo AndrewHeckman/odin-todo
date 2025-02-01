@@ -57,9 +57,9 @@
           <label for="project-add-name">Name:</label>
           <input type="text" id="project-add-name" name="project-add-name" autocomplete="off" required>
         </div>
-        <button type="submit" id="project-add-submit">Submit</button>
+        <button type="submit" id="project-add-submit" class="popup-btn">Submit</button>
+        <button type="cancel" id="project-add-close" class="popup-btn">Close</button>
       </form>
-      <button id="project-add-close">Close</button>
     </dialog>
     <dialog id="task-add-dialog" class="popup">
       <form id="task-add-form" name="task-add-form" action="index.html">
@@ -83,10 +83,10 @@
           <label for="task-add-date">Due date:</label>
           <input type="date" id="task-add-date" name="task-add-date">
         </div>
-        <button type="submit" id="task-add-submit">Submit</button>
+        <button type="submit" id="task-add-submit" class="popup-btn">Submit</button>
+        <button type="cancel" id="task-add-close" class="popup-btn">Close</button>
         <input type="hidden" id="task-add-src" name="task-add-src" value="0">
       </form>
-      <button id="task-add-close">Close</button>
     </dialog>
     <dialog id="task-edit-dialog" class="popup">
       <form id="task-edit-form" name="task-edit-form" action="index.html">
@@ -110,10 +110,10 @@
           <label for="task-edit-date">Due date:</label>
           <input type="date" id="task-edit-date" name="task-edit-date">
         </div>
-        <button type="submit" id="task-edit-submit">Submit</button>
+        <button type="submit" id="task-edit-submit" class="popup-btn">Submit</button>
+        <button type="cancel" id="task-edit-close" class="popup-btn">Close</button>
         <input type="hidden" id="task-edit-src" name="task-edit-src" value="0">
       </form>
-      <button id="task-edit-close">Close</button>
     </dialog>
     <dialog id="project-edit-dialog" class="popup">
       <form id="project-edit-form" name="project-edit-form" action="index.html">
@@ -122,29 +122,29 @@
           <label for="project-edit-name">Name:</label>
           <input type="text" id="project-edit-name" name="project-edit-name" autocomplete="off" required>
         </div>
-        <button type="submit" id="project-edit-submit">Submit</button>
+        <button type="submit" id="project-edit-submit" class="popup-btn">Submit</button>
+        <button type="cancel" id="project-edit-close" class="popup-btn">Close</button>
         <input type="hidden" id="project-edit-src" name="project-edit-src" value="0">
       </form>
-      <button id="project-edit-close">Close</button>
     </dialog>
     <dialog id="task-delete-dialog" class="popup">
       <form id="task-delete-form" name="task-delete-form" action="index.html">
         <h2>Delete task</h2>
         <p>Are you sure you want to delete this task?</p>
-        <button type="submit" id="task-delete-submit">Delete</button>
+        <button type="submit" id="task-delete-submit" class="popup-btn">Delete</button>
+        <button type="cancel" id="task-delete-close" class="popup-btn">Close</button>
         <input type="hidden" id="task-delete-src" name="task-delete-src" value="0">
       </form>
-      <button id="task-delete-close">Close</button>
     </dialog>
     <dialog id="project-delete-dialog" class="popup">
       <form id="project-delete-form" name="project-delete-form" action="index.html">
         <h2>Delete project</h2>
         <p>Do you want to delete this project's tasks or move them to the inbox?</p>
-        <button type="submit" id="project-delete-submit">Delete</button>
-        <button type="submit" id="project-delete-move">Move to inbox</button>
+        <button type="submit" id="project-delete-submit" class="popup-btn">Delete</button>
+        <button type="submit" id="project-delete-move" class="popup-btn">Move to inbox</button>
+        <button type="cancel" id="project-delete-close" class="popup-btn">Close</button>
         <input type="hidden" id="project-delete-src" name="project-delete-src" value="0">
       </form>
-      <button id="project-delete-close">Close</button>
     </dialog>
   </body>
 </html>
