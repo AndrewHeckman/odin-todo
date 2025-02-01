@@ -3,17 +3,23 @@
   "version": "1.0.0",
   "description": "Initialize using npm init, then npm install.",
   "main": "index.js",
+  "homepage": "https://andrewheckman.github.io/odin-todo/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewHeckman/odin-todo.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack server",
     "build": "webpack",
-    "dev": "webpack serve",
-    "deploy": "git checkout gh-pages && git merge main --no-edit; npm run build; git add dist -f && git commit -m \"Deployment commit\"; git subtree push --prefix dist origin gh-pages"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^7.1.2",
+    "gh-pages": "^6.3.0",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "style-loader": "^4.0.0",
