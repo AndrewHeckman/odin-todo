@@ -16,6 +16,9 @@
   --important: #ff4444;
   --body-text: white;
   --sidebar-text: white;
+  --high: #c00000;
+  --medium: #ffbb33;
+  --low: #008000;
 }
 
 .flex {
@@ -96,6 +99,18 @@ main {
   grid-template-columns: 2rem 1fr 8em 4em;
   grid-template-rows: 1fr;
   color: white;
+}
+
+.high{
+  border-left: 4px solid var(--high);
+}
+
+.medium{
+  border-left: 4px solid var(--medium);
+}
+
+.low{
+  border-left: 4px solid var(--low);
 }
 
 .complete .task-text{

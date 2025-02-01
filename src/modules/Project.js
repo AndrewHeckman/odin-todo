@@ -33,6 +33,7 @@ export default class Project {
    * @param {Date=} taskJson.creationDate date task was created, default: Date.now()
    * @param {Date=} taskJson.dueDate date task is due, default: null
    * @param {Boolean=} taskJson.completed status of task, default: false
+   * @param {Number=} taskJson.priority priority of task, default: 0
    * @returns {Number} the id of the new task
    */
   addTask(taskJson) {
@@ -73,6 +74,7 @@ export default class Project {
     task.name = taskJson.name;
     task.description = taskJson.description;
     task.dueDate = taskJson.dueDate;
+    task.priority = taskJson.priority;
     return true;
   }
 

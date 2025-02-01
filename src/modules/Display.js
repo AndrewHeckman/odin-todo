@@ -100,6 +100,7 @@ export default class Display {
     let description = document.querySelector("#task-add-desc").value;
     let dateString = document.querySelector("#task-add-date").value;
     let dueDate = null;
+    let priority = parseInt(document.querySelector("#task-add-priority").value);
     let src = document.querySelector("#task-add-src").value;
     
     if (dateString && dateString != "Invalid Date") {
@@ -108,12 +109,12 @@ export default class Display {
     }
 
     // add task to projectList
-    let id = this.#projectList.addTask(projectId, { name, description, dueDate });
+    let id = this.#projectList.addTask(projectId, { name, description, dueDate, priority });
     
     this.#saveData();
 
     // create task element
-    this.#createTaskElement({ id, projectId, name, description, dueDate });
+    this.#createTaskElement({ id, projectId, name, description, dueDate, priority });
     
     this.#taskAddDialog.close();
 
@@ -216,6 +217,7 @@ export default class Display {
     document.querySelector("#task-edit-name").value = taskData.name;
     document.querySelector("#task-edit-project").value = project;
     document.querySelector("#task-edit-desc").value = taskData.description;
+    document.querySelector("#task-edit-priority").value = taskData.priority;
     document.querySelector("#task-edit-src").value = id;
     if (dueDate) {
       let year = dueDate.getFullYear();
@@ -246,6 +248,7 @@ export default class Display {
     let description = document.querySelector("#task-edit-desc").value;
     let dateString = document.querySelector("#task-edit-date").value;
     let dueDate = null;
+    let priority = parseInt(document.querySelector("#task-edit-priority").value);
     
     if (dateString && dateString != "Invalid Date") {
       dateString = `${dateString}T00:00:00`;
@@ -253,17 +256,18 @@ export default class Display {
     }
 
     // update task element
-    this.#editTaskElement(id, { name, description, dueDate });
+    this.#editTaskElement(id, { name, description, dueDate, priority });
     
     // if project is changed, move task
     let oldProjectId = this.#getTaskElementObject(id).projectId;
     if (oldProjectId != projectId) {
       this.#moveTaskElement(id, projectId);
       this.#projectList.moveTask(oldProjectId, id, projectId);
+      this.#renderProject(projectId);
     }
 
     // update task in projectList
-    this.#projectList.editTask(projectId, id, { name, description, dueDate });
+    this.#projectList.editTask(projectId, id, { name, description, dueDate, priority });
     
     this.#saveData();
 
@@ -475,7 +479,7 @@ export default class Display {
    * @param {Boolean=} taskJson.completed status of task, default: false
    * @returns {HTMLElement} task element
    */
-  #createTaskElement({ id, projectId, name, description = null, dueDate = null, completed = false }) {
+  #createTaskElement({ id, projectId, name, description = null, dueDate = null, completed = false, priority = 0 }) {
     let taskElement = document.createElement("div");
     let checkbox = document.createElement("button");
     let taskText = document.createElement("div");
@@ -492,6 +496,8 @@ export default class Display {
     taskElement.id = `t${id}`;
     taskElement.dataset.task = id;
     taskElement.dataset.proj = projectId
+
+    if (completed) taskElement.classList.add("complete");
 
     checkbox.classList.add("checkbox");
     checkbox.id = `t${id}-check`;
@@ -527,6 +533,18 @@ export default class Display {
       taskDueDate.id = `t${id}-date`;
       taskDueDate.textContent = dueDate.toDateString();
       taskElement.appendChild(taskDueDate);
+    }
+
+    switch (priority) {
+      case 0:
+        taskElement.classList.add("low");
+        break;
+      case 1:
+        taskElement.classList.add("medium");
+        break;
+      case 2:
+        taskElement.classList.add("high");
+        break;
     }
 
     taskDelete.classList.add("task-delete");
@@ -605,7 +623,7 @@ export default class Display {
     document.querySelector(`#task-edit-p${projectId}`).textContent = newName;
   }
 
-  #editTaskElement(taskId, { name, description, dueDate }) {
+  #editTaskElement(taskId, { name, description, dueDate, priority }) {
     let task = this.#getTaskElementObject(taskId).taskElement;
     let descElement = task.querySelector(".task-desc");
     let dueDateElement = task.querySelector(".task-date");
@@ -640,6 +658,24 @@ export default class Display {
     }
     else if (dueDateElement) {
       dueDateElement.remove();
+    }
+
+    switch (priority) {
+      case 0:
+        task.classList.remove("medium");
+        task.classList.remove("high");
+        task.classList.add("low");
+        break;
+      case 1:
+        task.classList.remove("low");
+        task.classList.remove("high");
+        task.classList.add("medium");
+        break;
+      case 2:
+        task.classList.remove("low");
+        task.classList.remove("medium");
+        task.classList.add("high");
+        break;
     }
   }
 

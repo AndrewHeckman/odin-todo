@@ -6,6 +6,7 @@ export default class Task {
   #creationDate;
   #dueDate;
   #completed;
+  #priority;
   static #usedIds = [];
   static #nextId = 0;
 
@@ -20,7 +21,7 @@ export default class Task {
    * @param {Date=} taskJson.dueDate date task is due, default: null
    * @param {Boolean=} taskJson.completed status of task, default: false
    */
-  constructor({ id=null, projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false }) {
+  constructor({ id=null, projectId, name, description = null, creationDate = Date.now(), dueDate = null, completed = false, priority = 0 }) {
     if (id != null) {
       this.#id = id;
       Task.#usedIds.push(id);
@@ -33,6 +34,7 @@ export default class Task {
     if (dueDate) this.#dueDate = new Date(dueDate);
     else this.#dueDate = null;
     this.#completed = completed;
+    this.#priority = priority;
   }
 
   /**
@@ -56,7 +58,8 @@ export default class Task {
       description: this.#description,
       creationDate: this.#creationDate,
       dueDate: this.#dueDate,
-      completed: this.#completed
+      completed: this.#completed,
+      priority: this.#priority
     };
   }
 
@@ -86,6 +89,7 @@ export default class Task {
   get creationDate() { return this.#creationDate; }
   get dueDate() { return this.#dueDate; }
   get completed() { return this.#completed; }
+  get priority() { return this.#priority; }
   get overdue() {
     if (this.#completed || this.#dueDate === null) return false;
     else return (Date.now() > this.#dueDate);
@@ -96,4 +100,9 @@ export default class Task {
   set name(name) { this.#name = name; }
   set description(description) { this.#description = description; }
   set dueDate(dueDate) { this.#dueDate = dueDate; }
+  set priority(priority) {
+    if (priority < 0) this.#priority = 0;
+    else if (priority > 2) this.#priority = 2;
+    else this.#priority = priority;
+  }
 }
