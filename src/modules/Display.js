@@ -684,7 +684,7 @@ export default class Display {
 
       this.#taskElements.forEach(task => {
         let dueDate = this.#projectList.getTaskData(task.projectId, task.id).dueDate;
-        if (dueDate <= today) {
+        if (dueDate && dueDate <= today) {
           this.#todayTasks.appendChild(task.taskElement);
         }
       })

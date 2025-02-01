@@ -30,7 +30,8 @@ export default class Task {
     this.#name = name;
     this.#description = description;
     this.#creationDate = new Date(creationDate);
-    this.#dueDate = new Date(dueDate);
+    if (dueDate) this.#dueDate = new Date(dueDate);
+    else this.#dueDate = null;
     this.#completed = completed;
   }
 
